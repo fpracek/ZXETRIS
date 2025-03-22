@@ -1,0 +1,25 @@
+{
+  "rootFolder": "${workspaceFolder}",
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "dezog",
+        "rootFolder": "${workspaceFolder}",
+        "request": "launch",
+        "name": "MARTIAN WAR",
+        "remoteType": "zsim",
+        "zsim": {
+              "preset": "spectrum",
+              "memoryModel": "ZX48K",
+        },
+        "startAutomatically": true,
+        "preLaunchTask": "buildZXSpectrum",
+        "load":"${workspaceFolder}\\martian.sna",
+        "sjasmplus": [
+        {
+          "path": "${workspaceFolder}\\martian.sld"
+        }],
+      }
+    ]
+  }
+  

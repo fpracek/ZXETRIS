@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "buildZXSpectrum",
+        "type": "shell",
+        "command": "sjasmplus",
+        "args": [
+          "--inc=./includes",
+          "--sld=${workspaceFolder}\\martian.sld",
+          "--fullpath",
+          "--lst=${workspaceFolder}\\martian.list",
+          "martian.asm"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      }
+    ]
+  }
+  

@@ -1,0 +1,566 @@
+# file opened: ./src/samprwrl.asm
+  1   0000                      DEVICE ZXSPECTRUM48
+  2   0000                      SLDOPT COMMENT WPMEM, LOGPOINT, ASSERTION
+  3   0000
+  4   0000                      INCLUDE "constants.asm"
+# file opened: ./inc/constants.asm
+  1+  0000              ; ===================================================================
+  2+  0000              ; Constants
+  3+  0000              ; ===================================================================
+  4+  0000              SPR_SAMPR_LEFT        EQU		0
+  5+  0000
+  6+  0000
+  7+  0000              SCR_BASE                        EQU 0x4000      ; Base address of the Spectrum screen
+  8+  0000              ATTR_BASE                       EQU 0x5800      ; Start of the attribute area
+  9+  0000              ROM_CHAR_SET_ADDRESS            EQU 0x3D00      ; Start of the ROM character set
+ 10+  0000              RAM_CHAR_SET_ADDRESS            EQU 0x9C40      ; Start of the RAM character set
+ 11+  0000
+# file closed: ./inc/constants.asm
+  5   0000                      INCLUDE "tiles.asm"
+# file opened: ./inc/tiles.asm
+  1+  0000              ; ===================================================================
+  2+  0000              ; Tiles
+  3+  0000              ; ===================================================================
+  4+  0000
+  5+  0000
+  6+  0000
+  7+  0000
+  8+  0000              TILES_DEF:
+  9+  0000              ; Item[0] (offset:0)
+ 10+  0000 0F           	db 0x0F
+ 11+  0001 1F           	db 0x1F
+ 12+  0002 3F           	db 0x3F
+ 13+  0003 00           	db 0x00
+ 14+  0004 1F           	db 0x1F
+ 15+  0005 18           	db 0x18
+ 16+  0006 18           	db 0x18
+ 17+  0007 18           	db 0x18
+ 18+  0008              ; Item[1] (offset:8)
+ 19+  0008 80           	db 0x80
+ 20+  0009 C0           	db 0xC0
+ 21+  000A F8           	db 0xF8
+ 22+  000B 00           	db 0x00
+ 23+  000C C0           	db 0xC0
+ 24+  000D F0           	db 0xF0
+ 25+  000E F0           	db 0xF0
+ 26+  000F C0           	db 0xC0
+ 27+  0010              ; Item[2] (offset:16)
+ 28+  0010 07           	db 0x07
+ 29+  0011 0F           	db 0x0F
+ 30+  0012 1F           	db 0x1F
+ 31+  0013 00           	db 0x00
+ 32+  0014 0F           	db 0x0F
+ 33+  0015 0C           	db 0x0C
+ 34+  0016 0C           	db 0x0C
+ 35+  0017 0C           	db 0x0C
+ 36+  0018              ; Item[3] (offset:24)
+ 37+  0018 C0           	db 0xC0
+ 38+  0019 E0           	db 0xE0
+ 39+  001A FC           	db 0xFC
+ 40+  001B 00           	db 0x00
+ 41+  001C E0           	db 0xE0
+ 42+  001D 78           	db 0x78
+ 43+  001E 78           	db 0x78
+ 44+  001F 60           	db 0x60
+ 45+  0020              ; Item[4] (offset:32)
+ 46+  0020 01           	db 0x01
+ 47+  0021 03           	db 0x03
+ 48+  0022 07           	db 0x07
+ 49+  0023 00           	db 0x00
+ 50+  0024 03           	db 0x03
+ 51+  0025 03           	db 0x03
+ 52+  0026 03           	db 0x03
+ 53+  0027 03           	db 0x03
+ 54+  0028              ; Item[5] (offset:40)
+ 55+  0028 F0           	db 0xF0
+ 56+  0029 F8           	db 0xF8
+ 57+  002A FF           	db 0xFF
+ 58+  002B 00           	db 0x00
+ 59+  002C F8           	db 0xF8
+ 60+  002D 1E           	db 0x1E
+ 61+  002E 1E           	db 0x1E
+ 62+  002F 18           	db 0x18
+ 63+  0030              ; Item[6] (offset:48)
+ 64+  0030 1F           	db 0x1F
+ 65+  0031 1E           	db 0x1E
+ 66+  0032 1F           	db 0x1F
+ 67+  0033 1F           	db 0x1F
+ 68+  0034 00           	db 0x00
+ 69+  0035 1C           	db 0x1C
+ 70+  0036 1E           	db 0x1E
+ 71+  0037 1E           	db 0x1E
+ 72+  0038              ; Item[7] (offset:56)
+ 73+  0038 E0           	db 0xE0
+ 74+  0039 20           	db 0x20
+ 75+  003A E0           	db 0xE0
+ 76+  003B E0           	db 0xE0
+ 77+  003C 00           	db 0x00
+ 78+  003D E0           	db 0xE0
+ 79+  003E F0           	db 0xF0
+ 80+  003F F0           	db 0xF0
+ 81+  0040              ; Item[8] (offset:64)
+ 82+  0040 0F           	db 0x0F
+ 83+  0041 0F           	db 0x0F
+ 84+  0042 0F           	db 0x0F
+ 85+  0043 0F           	db 0x0F
+ 86+  0044 00           	db 0x00
+ 87+  0045 0C           	db 0x0C
+ 88+  0046 0F           	db 0x0F
+ 89+  0047 07           	db 0x07
+ 90+  0048              ; Item[9] (offset:72)
+ 91+  0048 F0           	db 0xF0
+ 92+  0049 10           	db 0x10
+ 93+  004A F0           	db 0xF0
+ 94+  004B F0           	db 0xF0
+ 95+  004C 0C           	db 0x0C
+ 96+  004D 7C           	db 0x7C
+ 97+  004E 70           	db 0x70
+ 98+  004F 00           	db 0x00
+ 99+  0050              ; Item[10] (offset:80)
+100+  0050 03           	db 0x03
+101+  0051 03           	db 0x03
+102+  0052 03           	db 0x03
+103+  0053 03           	db 0x03
+104+  0054 00           	db 0x00
+105+  0055 03           	db 0x03
+106+  0056 03           	db 0x03
+107+  0057 03           	db 0x03
+108+  0058              ; Item[11] (offset:88)
+109+  0058 FC           	db 0xFC
+110+  0059 C4           	db 0xC4
+111+  005A FC           	db 0xFC
+112+  005B FC           	db 0xFC
+113+  005C 00           	db 0x00
+114+  005D 8C           	db 0x8C
+115+  005E 8E           	db 0x8E
+116+  005F 1C           	db 0x1C
+117+  0060              ; Item[12] (offset:96)
+118+  0060 00           	db 0x00
+119+  0061 00           	db 0x00
+120+  0062 E0           	db 0xE0
+121+  0063 00           	db 0x00
+122+  0064 00           	db 0x00
+123+  0065 C0           	db 0xC0
+124+  0066 C0           	db 0xC0
+125+  0067 00           	db 0x00
+126+  0068              ; Item[13] (offset:104)
+127+  0068 01           	db 0x01
+128+  0069 03           	db 0x03
+129+  006A 1F           	db 0x1F
+130+  006B 00           	db 0x00
+131+  006C 03           	db 0x03
+132+  006D 0F           	db 0x0F
+133+  006E 0F           	db 0x0F
+134+  006F 03           	db 0x03
+135+  0070              ; Item[14] (offset:112)
+136+  0070 F0           	db 0xF0
+137+  0071 F8           	db 0xF8
+138+  0072 FC           	db 0xFC
+139+  0073 00           	db 0x00
+140+  0074 F8           	db 0xF8
+141+  0075 18           	db 0x18
+142+  0076 18           	db 0x18
+143+  0077 18           	db 0x18
+144+  0078              ; Item[15] (offset:120)
+145+  0078 03           	db 0x03
+146+  0079 07           	db 0x07
+147+  007A 3F           	db 0x3F
+148+  007B 00           	db 0x00
+149+  007C 07           	db 0x07
+150+  007D 1E           	db 0x1E
+151+  007E 1E           	db 0x1E
+152+  007F 06           	db 0x06
+153+  0080              ; Item[16] (offset:128)
+154+  0080 BE           	db 0xBE
+155+  0081 7F           	db 0x7F
+156+  0082 FF           	db 0xFF
+157+  0083 00           	db 0x00
+158+  0084 7F           	db 0x7F
+159+  0085 63           	db 0x63
+160+  0086 63           	db 0x63
+161+  0087 63           	db 0x63
+162+  0088              ; Item[17] (offset:136)
+163+  0088 00           	db 0x00
+164+  0089 00           	db 0x00
+165+  008A 00           	db 0x00
+166+  008B 00           	db 0x00
+167+  008C 00           	db 0x00
+168+  008D 00           	db 0x00
+169+  008E 00           	db 0x00
+170+  008F 00           	db 0x00
+171+  0090              ; Item[18] (offset:144)
+172+  0090 55           	db 0x55
+173+  0091 55           	db 0x55
+174+  0092 55           	db 0x55
+175+  0093 55           	db 0x55
+176+  0094 55           	db 0x55
+177+  0095 55           	db 0x55
+178+  0096 55           	db 0x55
+179+  0097 55           	db 0x55
+180+  0098              ; Item[19] (offset:152)
+181+  0098 55           	db 0x55
+182+  0099 55           	db 0x55
+183+  009A 55           	db 0x55
+184+  009B 55           	db 0x55
+185+  009C 55           	db 0x55
+186+  009D 55           	db 0x55
+187+  009E 55           	db 0x55
+188+  009F 55           	db 0x55
+189+  00A0              ; Item[20] (offset:160)
+190+  00A0 55           	db 0x55
+191+  00A1 55           	db 0x55
+192+  00A2 55           	db 0x55
+193+  00A3 55           	db 0x55
+194+  00A4 55           	db 0x55
+195+  00A5 55           	db 0x55
+196+  00A6 55           	db 0x55
+197+  00A7 55           	db 0x55
+198+  00A8              ; Item[21] (offset:168)
+199+  00A8 55           	db 0x55
+200+  00A9 55           	db 0x55
+201+  00AA 55           	db 0x55
+202+  00AB 55           	db 0x55
+203+  00AC 55           	db 0x55
+204+  00AD 55           	db 0x55
+205+  00AE 55           	db 0x55
+206+  00AF 55           	db 0x55
+207+  00B0              ; Item[22] (offset:176)
+208+  00B0 55           	db 0x55
+209+  00B1 55           	db 0x55
+210+  00B2 55           	db 0x55
+211+  00B3 55           	db 0x55
+212+  00B4 55           	db 0x55
+213+  00B5 55           	db 0x55
+214+  00B6 55           	db 0x55
+215+  00B7 55           	db 0x55
+216+  00B8              ; Item[23] (offset:184)
+217+  00B8 55           	db 0x55
+218+  00B9 55           	db 0x55
+219+  00BA 55           	db 0x55
+220+  00BB 55           	db 0x55
+221+  00BC 55           	db 0x55
+222+  00BD 55           	db 0x55
+223+  00BE 55           	db 0x55
+224+  00BF 55           	db 0x55
+225+  00C0              ; Item[24] (offset:192)
+226+  00C0 E0           	db 0xE0
+227+  00C1 F0           	db 0xF0
+228+  00C2 F8           	db 0xF8
+229+  00C3 00           	db 0x00
+230+  00C4 F0           	db 0xF0
+231+  00C5 30           	db 0x30
+232+  00C6 30           	db 0x30
+233+  00C7 30           	db 0x30
+234+  00C8              ; Item[25] (offset:200)
+235+  00C8 7F           	db 0x7F
+236+  00C9 78           	db 0x78
+237+  00CA 7F           	db 0x7F
+238+  00CB 7F           	db 0x7F
+239+  00CC 00           	db 0x00
+240+  00CD 73           	db 0x73
+241+  00CE F3           	db 0xF3
+242+  00CF E3           	db 0xE3
+243+  00D0              ; Item[26] (offset:208)
+244+  00D0 80           	db 0x80
+245+  00D1 80           	db 0x80
+246+  00D2 80           	db 0x80
+247+  00D3 80           	db 0x80
+248+  00D4 00           	db 0x00
+249+  00D5 80           	db 0x80
+250+  00D6 80           	db 0x80
+251+  00D7 80           	db 0x80
+252+  00D8              ; Item[27] (offset:216)
+253+  00D8 07           	db 0x07
+254+  00D9 04           	db 0x04
+255+  00DA 07           	db 0x07
+256+  00DB 07           	db 0x07
+257+  00DC 00           	db 0x00
+258+  00DD 07           	db 0x07
+259+  00DE 0F           	db 0x0F
+260+  00DF 0F           	db 0x0F
+261+  00E0              ; Item[28] (offset:224)
+262+  00E0 F8           	db 0xF8
+263+  00E1 78           	db 0x78
+264+  00E2 F8           	db 0xF8
+265+  00E3 F8           	db 0xF8
+266+  00E4 00           	db 0x00
+267+  00E5 38           	db 0x38
+268+  00E6 78           	db 0x78
+269+  00E7 78           	db 0x78
+270+  00E8              ; Item[29] (offset:232)
+271+  00E8 0F           	db 0x0F
+272+  00E9 08           	db 0x08
+273+  00EA 0F           	db 0x0F
+274+  00EB 0F           	db 0x0F
+275+  00EC 30           	db 0x30
+276+  00ED 3E           	db 0x3E
+277+  00EE 0E           	db 0x0E
+278+  00EF 00           	db 0x00
+279+  00F0              ; Item[30] (offset:240)
+280+  00F0 F0           	db 0xF0
+281+  00F1 F0           	db 0xF0
+282+  00F2 F0           	db 0xF0
+283+  00F3 F0           	db 0xF0
+284+  00F4 00           	db 0x00
+285+  00F5 30           	db 0x30
+286+  00F6 F0           	db 0xF0
+287+  00F7 E0           	db 0xE0
+288+  00F8              ; Item[31] (offset:248)
+289+  00F8 0F           	db 0x0F
+290+  00F9 1F           	db 0x1F
+291+  00FA FF           	db 0xFF
+292+  00FB 00           	db 0x00
+293+  00FC 1F           	db 0x1F
+294+  00FD 78           	db 0x78
+295+  00FE 78           	db 0x78
+296+  00FF 18           	db 0x18
+297+  0100              ; Item[32] (offset:256)
+298+  0100 80           	db 0x80
+299+  0101 C0           	db 0xC0
+300+  0102 E0           	db 0xE0
+301+  0103 00           	db 0x00
+302+  0104 C0           	db 0xC0
+303+  0105 C0           	db 0xC0
+304+  0106 C0           	db 0xC0
+305+  0107 C0           	db 0xC0
+306+  0108              ; Item[33] (offset:264)
+307+  0108 00           	db 0x00
+308+  0109 00           	db 0x00
+309+  010A 07           	db 0x07
+310+  010B 00           	db 0x00
+311+  010C 00           	db 0x00
+312+  010D 03           	db 0x03
+313+  010E 03           	db 0x03
+314+  010F 00           	db 0x00
+315+  0110              ; Item[34] (offset:272)
+316+  0110 7C           	db 0x7C
+317+  0111 FE           	db 0xFE
+318+  0112 FF           	db 0xFF
+319+  0113 00           	db 0x00
+320+  0114 FE           	db 0xFE
+321+  0115 C6           	db 0xC6
+322+  0116 C6           	db 0xC6
+323+  0117 C6           	db 0xC6
+324+  0118              ; Item[35] (offset:280)
+325+  0118 3F           	db 0x3F
+326+  0119 23           	db 0x23
+327+  011A 3F           	db 0x3F
+328+  011B 3F           	db 0x3F
+329+  011C 00           	db 0x00
+330+  011D 31           	db 0x31
+331+  011E 71           	db 0x71
+332+  011F 38           	db 0x38
+333+  0120              ; Item[36] (offset:288)
+334+  0120 C0           	db 0xC0
+335+  0121 C0           	db 0xC0
+336+  0122 C0           	db 0xC0
+337+  0123 C0           	db 0xC0
+338+  0124 00           	db 0x00
+339+  0125 C0           	db 0xC0
+340+  0126 C0           	db 0xC0
+341+  0127 C0           	db 0xC0
+342+  0128              ; Item[37] (offset:296)
+343+  0128 01           	db 0x01
+344+  0129 01           	db 0x01
+345+  012A 01           	db 0x01
+346+  012B 01           	db 0x01
+347+  012C 00           	db 0x00
+348+  012D 01           	db 0x01
+349+  012E 01           	db 0x01
+350+  012F 01           	db 0x01
+351+  0130              ; Item[38] (offset:304)
+352+  0130 FE           	db 0xFE
+353+  0131 1E           	db 0x1E
+354+  0132 FE           	db 0xFE
+355+  0133 FE           	db 0xFE
+356+  0134 00           	db 0x00
+357+  0135 CE           	db 0xCE
+358+  0136 CF           	db 0xCF
+359+  0137 C7           	db 0xC7
+360+  0138              ; Patterns size: 312 Bytes
+361+  0138
+362+  0138
+# file closed: ./inc/tiles.asm
+  6   0138                      INCLUDE "screen.asm"
+# file opened: ./inc/screen.asm
+  1+  0138              ; ===================================================================
+  2+  0138              ; Screen subroutines
+  3+  0138              ; ===================================================================
+  4+  0138
+  5+  0138
+  6+  0138
+  7+  0138              ;------------------------------------------------------------------------
+  8+  0138              ; Load 8x8 tiles into RAM
+  9+  0138              ; INPUT: -
+ 10+  0138              ; OUTPUT: -
+ 11+  0138              ; MODIFIES: DE, HL, BC
+ 12+  0138              ;------------------------------------------------------------------------
+ 13+  0138              Screen_LoadTiles:
+ 14+  0138 F3                   DI                      ; Interrupts disabled
+ 15+  0139 11 40 9F             LD   DE, RAM_CHAR_SET_ADDRESS + (96*8)
+ 16+  013C 21 00 00             LD   HL, TILES_DEF
+ 17+  013F 01 38 01             LD   BC, 312
+ 18+  0142 ED B0                LDIR
+ 19+  0144 FB                   EI                      ; Interrupts enabled
+ 20+  0145 C9                   RET
+ 21+  0146
+ 22+  0146              ;------------------------------------------------------------------------
+ 23+  0146              ; Clear the screen and set attributes
+ 24+  0146              ; INPUT: -
+ 25+  0146              ; OUTPUT: -
+ 26+  0146              ; MODIFIES: AF, DE, HL, BC
+ 27+  0146              ;------------------------------------------------------------------------
+ 28+  0146              Screen_ClearScreen:
+ 29+  0146 21 00 40             ld hl, 16384        ;pixels
+ 30+  0149 11 01 40             ld de, 16385        ;pixels + 1
+ 31+  014C 01 FF 17             ld bc, 6143         ;pixels area length - 1
+ 32+  014F 36 00                ld (hl), 0          ;set first byte to '0'
+ 33+  0151 ED B0                ldir                ;copy bytes
+ 34+  0153 3E 44                LD a, %000000 <<3 | %000100 | %1000000
+ 35+  0155 21 00 58             LD hl, ATTR_BASE               ; start at attribute start
+ 36+  0158 11 01 58             LD de, ATTR_BASE + 1           ; copy to next address in attributes
+ 37+  015B 01 FF 02             LD bc, 768 - 1    ; 'loop' attribute size minus 1 times
+ 38+  015E 77                   LD (hl), a                      ; initialize the first attribute
+ 39+  015F ED B0                LDIR                            ; fill the attributes
+ 40+  0161 3E 00                LD   A, 0       ; A = 0 (bit [2:0] = 0 => Nero)
+ 41+  0163 D3 FE                OUT  (0xFE), A  ; scrive 0 nella porta 0xFE
+ 42+  0165 AF                   xor a         ; start from row 0
+ 43+  0166              ClearScreenRowLoop:
+ 44+  0166 FE 18                cp 24
+ 45+  0168 C8                   ret z
+ 46+  0169 57                   ld d, a
+ 47+  016A F5                   push af
+ 48+  016B AF                   xor a      ; start from column 0
+ 49+  016C              ClearScreenColLoop:
+ 50+  016C FE 20                cp 32
+ 51+  016E CA 7D 01             jp z, ClearScreenColLoopEnd
+ 52+  0171 5F                   ld e, a
+ 53+  0172 F5                   push af
+ 54+  0173 3E 20                ld a,32
+ 55+  0175 CD 83 01             call Screen_PrintRamChar
+ 56+  0178 F1                   pop af
+ 57+  0179 3C                   inc a
+ 58+  017A C3 6C 01             jp ClearScreenColLoop
+ 59+  017D              ClearScreenColLoopEnd:
+ 60+  017D F1                   pop af
+ 61+  017E 3C                   inc a
+ 62+  017F C3 66 01             jp ClearScreenRowLoop
+ 63+  0182 C9                   RET
+ 64+  0183
+ 65+  0183              ;------------------------------------------------------------------------
+ 66+  0183              ; Print a single RAM character out to a screen address
+ 67+  0183              ; INPUT:
+ 68+  0183              ;   A: Character to print
+ 69+  0183              ;   D: Character Y position
+ 70+  0183              ;   E: Character X position
+ 71+  0183              ; OUTPUT: -
+ 72+  0183              ; MODIFIES: -
+ 73+  0183              ;------------------------------------------------------------------------
+ 74+  0183              Screen_PrintRamChar:
+ 75+  0183 D5                   PUSH DE
+ 76+  0184 D9                   EXX                             ; Backup registers BC, DE, HL
+ 77+  0185 D1                   POP DE
+ 78+  0186 F5                   PUSH AF
+ 79+  0187 21 40 9C             LD HL, RAM_CHAR_SET_ADDRESS     ; Character set bitmap data in ROM
+ 80+  018A 06 00                LD B,0                          ; BC = character code
+ 81+  018C 4F                   LD C, A
+ 82+  018D CB 21                SLA C                           ; Multiply by 8 by shifting
+ 83+  018F CB 10                RL B
+ 84+  0191 CB 21                SLA C
+ 85+  0193 CB 10                RL B
+ 86+  0195 CB 21                SLA C
+ 87+  0197 CB 10                RL B
+ 88+  0199 09                   ADD HL, BC                      ; And add to HL to get first byte of character
+ 89+  019A CD CF 01             CALL Screen_GetCharAddress           ; Get screen position in DE
+ 90+  019D 06 08                LD B,8                          ; Loop counter - 8 bytes per character
+ 91+  019F              PrintRamCharL1:
+ 92+  019F 7E                   LD A,(HL)                       ; Get the byte from the ROM into A
+ 93+  01A0 12                   LD (DE),A                       ; Stick A onto the screen
+ 94+  01A1 23                   INC HL                          ; Goto next byte of character
+ 95+  01A2 14                   INC D                           ; Goto next line on screen
+ 96+  01A3 10 FA                DJNZ PrintRamCharL1             ; Loop around whilst it is Not Zero (NZ)
+ 97+  01A5 D9                   EXX                             ; Restore registers BC, DE, HL
+ 98+  01A6 F1                   POP AF
+ 99+  01A7 C9                   RET
+100+  01A8              ;------------------------------------------------------------------------
+101+  01A8              ; Print a single ROM character out to a screen address
+102+  01A8              ; INPUT:
+103+  01A8              ;   A: Character to print
+104+  01A8              ;   D: Character Y position
+105+  01A8              ;   E: Character X position
+106+  01A8              ; OUTPUT: -
+107+  01A8              ; MODIFIES: -
+108+  01A8              ;------------------------------------------------------------------------
+109+  01A8              Screen_PrintRomChar:
+110+  01A8 D5                   PUSH DE
+111+  01A9 D9                   EXX                             ; Backup registers BC, DE, HL
+112+  01AA D1                   POP DE
+113+  01AB F5                   PUSH AF
+114+  01AC 21 00 3D             LD HL, ROM_CHAR_SET_ADDRESS     ; Character set bitmap data in ROM
+115+  01AF 06 00                LD B,0                          ; BC = character code
+116+  01B1 D6 20                SUB 32                          ; Adjust for the character set
+117+  01B3 4F                   LD C, A
+118+  01B4 CB 21                SLA C                           ; Multiply by 8 by shifting
+119+  01B6 CB 10                RL B
+120+  01B8 CB 21                SLA C
+121+  01BA CB 10                RL B
+122+  01BC CB 21                SLA C
+123+  01BE CB 10                RL B
+124+  01C0 09                   ADD HL, BC                      ; And add to HL to get first byte of character
+125+  01C1 CD CF 01             CALL Screen_GetCharAddress           ; Get screen position in DE
+126+  01C4 06 08                LD B,8                          ; Loop counter - 8 bytes per character
+127+  01C6              PrintRomCharL1:
+128+  01C6 7E                   LD A,(HL)                       ; Get the byte from the ROM into A
+129+  01C7 12                   LD (DE),A                       ; Stick A onto the screen
+130+  01C8 23                   INC HL                          ; Goto next byte of character
+131+  01C9 14                   INC D                           ; Goto next line on screen
+132+  01CA 10 FA                DJNZ PrintRomCharL1             ; Loop around whilst it is Not Zero (NZ)
+133+  01CC D9                   EXX                             ; Restore registers BC, DE, HL
+134+  01CD F1                   POP AF
+135+  01CE C9                   RET
+136+  01CF              ;------------------------------------------------------------------------
+137+  01CF              ; Get screen address from a character (X,Y) coordinate
+138+  01CF              ; INPUT:
+139+  01CF              ;   D: Y character position (0-23)
+140+  01CF              ;   E: X character position (0-31)
+141+  01CF              ; OUTPUT:
+142+  01CF              ;   DE: screen address
+143+  01CF              ; MODIFIES: A
+144+  01CF              ;------------------------------------------------------------------------
+145+  01CF              Screen_GetCharAddress:
+146+  01CF 7A                   LD A,D
+147+  01D0 E6 07                AND %00000111
+148+  01D2 1F                   RRA
+149+  01D3 1F                   RRA
+150+  01D4 1F                   RRA
+151+  01D5 1F                   RRA
+152+  01D6 B3                   OR E
+153+  01D7 5F                   LD E,A
+154+  01D8 7A                   LD A,D
+155+  01D9 E6 18                AND %00011000
+156+  01DB F6 40                OR %01000000
+157+  01DD 57                   LD D,A
+158+  01DE C9                   RET
+# file closed: ./inc/screen.asm
+  7   01DF
+  8   01DF
+  9   01DF                      ORG 0x8000               ; Loader address (0x8000)
+ 10   8000
+ 11   8000
+ 12   8000
+ 13   8000              ;========================================================================
+ 14   8000              ; START OF PROGRAM
+ 15   8000              ;========================================================================
+ 16   8000
+ 17   8000              StartGame:
+ 18   8000 31 58 FF             LD   SP, 0xFF58                 ; Inizializza lo stack
+ 19   8003 CD 38 01             CALL Screen_LoadTiles           ; Load tiles into RAM
+ 20   8006 CD 46 01             CALL Screen_ClearScreen         ; Clear screen
+ 21   8009              loop:
+ 22   8009 C3 09 80             jp loop
+ 23   800C
+ 24   800C
+ 25   800C                      SAVESNA "./out/samprwrl.sna", StartGame
+ 26   800C              END
+ 27   800C
+# file closed: ./src/samprwrl.asm

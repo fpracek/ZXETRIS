@@ -6,7 +6,7 @@
         "type": "dezog",
         "rootFolder": "${workspaceFolder}",
         "request": "launch",
-        "name": "MARTIAN WAR",
+        "name": "SAM.PR WORLD",
         "remoteType": "zsim",
         "zsim": {
               "preset": "spectrum",
@@ -14,10 +14,10 @@
         },
         "startAutomatically": true,
         "preLaunchTask": "buildZXSpectrum",
-        "load":"${workspaceFolder}\\martian.sna",
+        "load":"${workspaceFolder}/out/samprwrl.sna",
         "sjasmplus": [
         {
-          "path": "${workspaceFolder}\\martian.sld"
+          "path": "${workspaceFolder}/out/samprwrl.sld"
         }],
       }
     ]

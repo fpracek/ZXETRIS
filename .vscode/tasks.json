@@ -6,11 +6,11 @@
         "type": "shell",
         "command": "sjasmplus",
         "args": [
-          "--inc=./includes",
-          "--sld=${workspaceFolder}\\martian.sld",
+          "--inc=./inc",
+          "--sld=${workspaceFolder}/out/samprwrl.sld",
           "--fullpath",
-          "--lst=${workspaceFolder}\\martian.list",
-          "martian.asm"
+          "--lst=${workspaceFolder}/out/samprwrl.list",
+          "./src/samprwrl.asm"
         ],
         "group": {
           "kind": "build",

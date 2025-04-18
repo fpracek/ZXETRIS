@@ -1,3 +1,0 @@
-# SAM.PR WORLD
-SAM.PR WORLD
-

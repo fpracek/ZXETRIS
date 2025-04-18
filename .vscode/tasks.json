@@ -7,10 +7,10 @@
         "command": "sjasmplus",
         "args": [
           "--inc=./inc",
-          "--sld=${workspaceFolder}/out/samprwrl.sld",
+          "--sld=${workspaceFolder}/out/zxetris.sld",
           "--fullpath",
-          "--lst=${workspaceFolder}/out/samprwrl.list",
-          "./src/samprwrl.asm"
+          "--lst=${workspaceFolder}/out/zxetris.list",
+          "./src/zxetris.asm"
         ],
         "group": {
           "kind": "build",

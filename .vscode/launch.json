@@ -1,12 +1,12 @@
 {
   "rootFolder": "${workspaceFolder}",
-    "version": "0.2.0",
+    "version": "0.1.0",
     "configurations": [
       {
         "type": "dezog",
         "rootFolder": "${workspaceFolder}",
         "request": "launch",
-        "name": "SAM.PR WORLD",
+        "name": "ZXETRIS",
         "remoteType": "zsim",
         "zsim": {
               "preset": "spectrum",
@@ -14,10 +14,10 @@
         },
         "startAutomatically": true,
         "preLaunchTask": "buildZXSpectrum",
-        "load":"${workspaceFolder}/out/samprwrl.sna",
+        "load":"${workspaceFolder}/out/zxetris.sna",
         "sjasmplus": [
         {
-          "path": "${workspaceFolder}/out/samprwrl.sld"
+          "path": "${workspaceFolder}/out/zxetris.sld"
         }],
       }
     ]
